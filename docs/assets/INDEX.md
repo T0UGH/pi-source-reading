@@ -2,3 +2,4 @@
 - `pi-ch02-session-tree-runtime.svg` - pi session tree：从 append-only entry tree 到 active branch runtime context 的结构图
 - `pi-ch03-subagent-runtime-delegation.svg` - pi subagent：主 runtime、extension 调度器与独立子 pi 进程之间的 runtime 委派结构图
 - `pi-ch04-plan-mode-runtime-switch.svg` - pi plan mode：只读探索态、执行态与 session 状态层之间的 runtime mode switch 结构图
+- `pi-ch05-extension-surface-host-platform.svg` - pi extension surface：从核心 agent runtime 到宿主平台能力面的收口图

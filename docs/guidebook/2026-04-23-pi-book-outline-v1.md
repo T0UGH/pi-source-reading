@@ -223,6 +223,9 @@
 
 ### 当前已有材料
 - `docs/notes/2026-04-23-pi-extension-runtime-初读.md`
+- `docs/guidebook/2026-04-24-pi-ch05-extension-surface-expansion-v1.md`
+- `docs/articles/2026-04-24-pi-extension-surface-让-agent-产品变成宿主平台-v1.md`
+- `docs/assets/pi-ch05-extension-surface-host-platform.svg`
 - 前面几章的细读笔记
 
 ---
