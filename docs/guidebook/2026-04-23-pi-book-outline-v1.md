@@ -151,6 +151,9 @@
 
 ### 当前已有材料
 - `docs/notes/2026-04-23-pi-subagent-实现细读-v1.md`
+- `docs/guidebook/2026-04-24-pi-ch03-subagent-expansion-v1.md`
+- `docs/articles/2026-04-24-pi-subagent-不是-prompt-分身而是-runtime-委派-v1.md`
+- `docs/assets/pi-ch03-subagent-runtime-delegation.svg`
 
 ---
 
