@@ -191,6 +191,9 @@
 
 ### 当前已有材料
 - `docs/notes/2026-04-23-pi-plan-mode-实现细读-v1.md`
+- `docs/guidebook/2026-04-24-pi-ch04-plan-mode-expansion-v1.md`
+- `docs/articles/2026-04-24-pi-plan-mode-不是内建-planner-而是-runtime-mode-switch-v1.md`
+- `docs/assets/pi-ch04-plan-mode-runtime-switch.svg`
 
 ---
 

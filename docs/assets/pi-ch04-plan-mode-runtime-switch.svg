@@ -1,0 +1,69 @@
+<svg width="1280" height="620" viewBox="0 0 1280 620" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="620" rx="32" fill="#0B1020"/>
+  <rect x="40" y="40" width="1200" height="540" rx="28" fill="#111827" stroke="#334155" stroke-width="2"/>
+
+  <text x="80" y="96" fill="#F8FAFC" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="800">pi plan mode：不是内建 planner，而是 runtime mode switch</text>
+  <text x="80" y="132" fill="#94A3B8" font-family="Inter, Arial, sans-serif" font-size="18">同一个主 runtime 在只读探索态与执行态之间切换：工具池、提示层、状态机一起变。</text>
+
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#020617" flood-opacity="0.45"/>
+    </filter>
+    <marker id="arrowBlue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#38BDF8"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#34D399"/>
+    </marker>
+  </defs>
+
+  <!-- Extension state machine -->
+  <rect x="80" y="208" width="300" height="318" rx="24" fill="#1E293B" stroke="#38BDF8" stroke-width="2" filter="url(#shadow)"/>
+  <text x="112" y="256" fill="#E0F2FE" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="800">plan-mode extension</text>
+  <text x="112" y="298" fill="#CBD5E1" font-family="Inter, Arial, sans-serif" font-size="17">/plan · --plan · Ctrl+Alt+P</text>
+  <text x="112" y="334" fill="#CBD5E1" font-family="Inter, Arial, sans-serif" font-size="17">planModeEnabled</text>
+  <text x="112" y="366" fill="#CBD5E1" font-family="Inter, Arial, sans-serif" font-size="17">executionMode</text>
+  <text x="112" y="398" fill="#CBD5E1" font-family="Inter, Arial, sans-serif" font-size="17">todoItems[]</text>
+  <line x1="112" y1="430" x2="348" y2="430" stroke="#475569"/>
+  <text x="112" y="468" fill="#7DD3FC" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">轻量 workflow state machine</text>
+
+  <!-- Plan mode -->
+  <rect x="492" y="176" width="324" height="202" rx="24" fill="#451A03" stroke="#F59E0B" stroke-width="2" filter="url(#shadow)"/>
+  <text x="524" y="224" fill="#FEF3C7" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="800">只读探索态</text>
+  <text x="524" y="264" fill="#FDE68A" font-family="Inter, Arial, sans-serif" font-size="17">setActiveTools(PLAN_MODE_TOOLS)</text>
+  <text x="524" y="298" fill="#FDE68A" font-family="Inter, Arial, sans-serif" font-size="17">read · bash · grep · find · ls</text>
+  <text x="524" y="332" fill="#FDE68A" font-family="Inter, Arial, sans-serif" font-size="17">bash allowlist 阻止写操作</text>
+
+  <!-- Agent plan extraction -->
+  <rect x="492" y="395" width="324" height="130" rx="24" fill="#172554" stroke="#60A5FA" stroke-width="2" filter="url(#shadow)"/>
+  <text x="524" y="438" fill="#DBEAFE" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="800">计划抽取与确认</text>
+  <text x="524" y="476" fill="#BFDBFE" font-family="Inter, Arial, sans-serif" font-size="17">extractTodoItems("Plan:")</text>
+  <text x="524" y="506" fill="#BFDBFE" font-family="Inter, Arial, sans-serif" font-size="17">Execute / Stay / Refine</text>
+
+  <!-- Execution mode -->
+  <rect x="900" y="176" width="300" height="202" rx="24" fill="#052E16" stroke="#34D399" stroke-width="2" filter="url(#shadow)"/>
+  <text x="932" y="224" fill="#D1FAE5" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="800">执行态</text>
+  <text x="932" y="264" fill="#A7F3D0" font-family="Inter, Arial, sans-serif" font-size="17">setActiveTools(NORMAL_MODE_TOOLS)</text>
+  <text x="932" y="298" fill="#A7F3D0" font-family="Inter, Arial, sans-serif" font-size="17">read · bash · edit · write</text>
+  <text x="932" y="332" fill="#A7F3D0" font-family="Inter, Arial, sans-serif" font-size="17">按计划顺序执行</text>
+
+  <!-- Persistence -->
+  <rect x="900" y="395" width="300" height="130" rx="24" fill="#312E81" stroke="#A78BFA" stroke-width="2" filter="url(#shadow)"/>
+  <text x="932" y="438" fill="#F5F3FF" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="800">session 状态层</text>
+  <text x="932" y="476" fill="#DDD6FE" font-family="Inter, Arial, sans-serif" font-size="17">appendEntry("plan-mode")</text>
+  <text x="932" y="506" fill="#DDD6FE" font-family="Inter, Arial, sans-serif" font-size="17">resume 后重扫 [DONE:n]</text>
+
+  <!-- Arrows -->
+  <path d="M380 304 C420 268 444 260 492 260" stroke="#38BDF8" stroke-width="4" marker-end="url(#arrowBlue)"/>
+  <text x="402" y="244" fill="#7DD3FC" font-family="Inter, Arial, sans-serif" font-size="15">toggle</text>
+
+  <path d="M654 378 L654 395" stroke="#60A5FA" stroke-width="4" marker-end="url(#arrowBlue)"/>
+  <text x="674" y="390" fill="#93C5FD" font-family="Inter, Arial, sans-serif" font-size="15">Plan:</text>
+
+  <path d="M816 460 C858 438 876 340 900 304" stroke="#34D399" stroke-width="4" marker-end="url(#arrowGreen)"/>
+  <text x="820" y="412" fill="#86EFAC" font-family="Inter, Arial, sans-serif" font-size="15">Execute</text>
+
+  <path d="M1050 378 L1050 395" stroke="#A78BFA" stroke-width="4" marker-end="url(#arrowBlue)"/>
+  <text x="1070" y="390" fill="#C4B5FD" font-family="Inter, Arial, sans-serif" font-size="15">progress</text>
+
+</svg>
