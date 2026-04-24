@@ -22,13 +22,13 @@
 
 | 顺序 | 文章 | 这一章回答什么 |
 |---|---|---|
-| 00 | [这不是另一个 Claude Code：为什么 pi 值得单独研究](docs/articles/2026-04-24-pi-这不是另一个-claude-code-v1.md) | 为什么这本书不做功能大全，而要按“强成品 agent vs 可编程宿主”来读 |
-| 01 | [pi 不是强成品 agent，而是可编程宿主](docs/articles/2026-04-23-pi-不是强成品-agent-而是可编程宿主-v1.md) | `pi` 和 Claude Code 的产品路线差异到底是什么 |
-| 02 | [为什么 pi 要把 session 做成树，而不是聊天记录](docs/articles/2026-04-24-pi-session-tree-不是聊天记录而是-runtime-v1.md) | 为什么 session tree 是宿主路线的底座 |
-| 03 | [pi 的 subagent 不是 prompt 分身，而是独立 runtime 的委派](docs/articles/2026-04-24-pi-subagent-不是-prompt-分身而是-runtime-委派-v1.md) | 为什么 subagent 是 extension 层的 runtime 委派 |
-| 04 | [plan mode 不是内建 planner，而是宿主切出来的一种工作模式](docs/articles/2026-04-24-pi-plan-mode-不是内建-planner-而是-runtime-mode-switch-v1.md) | 为什么 plan mode 是主 runtime 的 mode switch |
-| 05 | [当 tool、UI、provider、compaction 都能外化，agent 产品会变成什么](docs/articles/2026-04-24-pi-extension-surface-让-agent-产品变成宿主平台-v1.md) | 为什么 extension surface 会把 agent 产品推向宿主平台 |
-| 06 | [为什么 pi 代表另一种 agent 产品路线](docs/articles/2026-04-24-pi-为什么代表另一种-agent-产品路线-v1.md) | `pi` 适合谁、不适合谁，以及它和强成品 agent 的关系 |
+| 00 | [这不是另一个 Claude Code：为什么 pi 值得单独研究](docs/articles/00-这不是另一个-claude-code.md) | 为什么这本书不做功能大全，而要按“强成品 agent vs 可编程宿主”来读 |
+| 01 | [pi 不是强成品 agent，而是可编程宿主](docs/articles/01-pi-不是强成品-agent-而是可编程宿主.md) | `pi` 和 Claude Code 的产品路线差异到底是什么 |
+| 02 | [为什么 pi 要把 session 做成树，而不是聊天记录](docs/articles/02-pi-session-tree-不是聊天记录而是-runtime.md) | 为什么 session tree 是宿主路线的底座 |
+| 03 | [pi 的 subagent 不是 prompt 分身，而是独立 runtime 的委派](docs/articles/03-pi-subagent-不是-prompt-分身而是-runtime-委派.md) | 为什么 subagent 是 extension 层的 runtime 委派 |
+| 04 | [plan mode 不是内建 planner，而是宿主切出来的一种工作模式](docs/articles/04-pi-plan-mode-不是内建-planner-而是-runtime-mode-switch.md) | 为什么 plan mode 是主 runtime 的 mode switch |
+| 05 | [当 tool、UI、provider、compaction 都能外化，agent 产品会变成什么](docs/articles/05-pi-extension-surface-让-agent-产品变成宿主平台.md) | 为什么 extension surface 会把 agent 产品推向宿主平台 |
+| 06 | [为什么 pi 代表另一种 agent 产品路线](docs/articles/06-pi-为什么代表另一种-agent-产品路线.md) | `pi` 适合谁、不适合谁，以及它和强成品 agent 的关系 |
 
 ---
 

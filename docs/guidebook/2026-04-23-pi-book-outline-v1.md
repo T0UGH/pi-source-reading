@@ -64,7 +64,7 @@
 
 ### 当前已有材料
 - `docs/guidebook/2026-04-24-pi-ch00-entry-expansion-v1.md`
-- `docs/articles/2026-04-24-pi-这不是另一个-claude-code-v1.md`
+- `docs/articles/00-这不是另一个-claude-code.md`
 - `docs/assets/pi-ch00-reading-map.svg`
 
 ---
@@ -96,7 +96,7 @@
 ### 当前已有材料
 - `docs/notes/2026-04-23-pi-vs-cc-差异点初判.md`
 - `docs/notes/2026-04-23-pi-extension-runtime-初读.md`
-- `docs/articles/2026-04-23-pi-不是强成品-agent-而是可编程宿主-v1.md`
+- `docs/articles/01-pi-不是强成品-agent-而是可编程宿主.md`
 - `docs/guidebook/2026-04-23-pi-ch01-expansion-v1.md`
 
 ---
@@ -126,7 +126,7 @@
 ### 当前已有材料
 - `docs/notes/2026-04-23-pi-session-runtime-初读.md`
 - `docs/guidebook/2026-04-24-pi-ch02-session-tree-expansion-v1.md`
-- `docs/articles/2026-04-24-pi-session-tree-不是聊天记录而是-runtime-v1.md`
+- `docs/articles/02-pi-session-tree-不是聊天记录而是-runtime.md`
 - `docs/assets/pi-ch02-session-tree-runtime.svg`
 
 ---
@@ -157,7 +157,7 @@
 ### 当前已有材料
 - `docs/notes/2026-04-23-pi-subagent-实现细读-v1.md`
 - `docs/guidebook/2026-04-24-pi-ch03-subagent-expansion-v1.md`
-- `docs/articles/2026-04-24-pi-subagent-不是-prompt-分身而是-runtime-委派-v1.md`
+- `docs/articles/03-pi-subagent-不是-prompt-分身而是-runtime-委派.md`
 - `docs/assets/pi-ch03-subagent-runtime-delegation.svg`
 
 ---
@@ -197,7 +197,7 @@
 ### 当前已有材料
 - `docs/notes/2026-04-23-pi-plan-mode-实现细读-v1.md`
 - `docs/guidebook/2026-04-24-pi-ch04-plan-mode-expansion-v1.md`
-- `docs/articles/2026-04-24-pi-plan-mode-不是内建-planner-而是-runtime-mode-switch-v1.md`
+- `docs/articles/04-pi-plan-mode-不是内建-planner-而是-runtime-mode-switch.md`
 - `docs/assets/pi-ch04-plan-mode-runtime-switch.svg`
 
 ---
@@ -229,7 +229,7 @@
 ### 当前已有材料
 - `docs/notes/2026-04-23-pi-extension-runtime-初读.md`
 - `docs/guidebook/2026-04-24-pi-ch05-extension-surface-expansion-v1.md`
-- `docs/articles/2026-04-24-pi-extension-surface-让-agent-产品变成宿主平台-v1.md`
+- `docs/articles/05-pi-extension-surface-让-agent-产品变成宿主平台.md`
 - `docs/assets/pi-ch05-extension-surface-host-platform.svg`
 - 前面几章的细读笔记
 
@@ -254,7 +254,7 @@
 
 ### 当前已有材料
 - `docs/guidebook/2026-04-24-pi-ch06-conclusion-expansion-v1.md`
-- `docs/articles/2026-04-24-pi-为什么代表另一种-agent-产品路线-v1.md`
+- `docs/articles/06-pi-为什么代表另一种-agent-产品路线.md`
 - `docs/assets/pi-ch06-product-route-conclusion.svg`
 
 ---
