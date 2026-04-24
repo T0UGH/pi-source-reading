@@ -1,0 +1,88 @@
+site_name: pi 源码导读
+site_description: 一套围绕 pi 为什么不是另一个 Claude Code，而是一种可编程 coding-agent 宿主展开的中文源码导读小书
+site_url: https://t0ugh.github.io/pi-source-reading/
+repo_url: https://github.com/T0UGH/pi-source-reading
+repo_name: T0UGH/pi-source-reading
+
+docs_dir: docs
+site_dir: site
+
+use_directory_urls: true
+
+theme:
+  name: material
+  language: zh
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.footer
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: white
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: 切换到深色模式
+    - scheme: slate
+      primary: black
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: 切换到浅色模式
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+exclude_docs: |
+  .git/**
+  .github/**
+  site/**
+  *.py
+  *.sh
+
+validation:
+  omitted_files: ignore
+  absolute_links: warn
+  unrecognized_links: warn
+
+nav:
+  - 首页: index.md
+  - 正文索引: articles/INDEX.md
+  - pi 可编程宿主小书（00-06）:
+      - 00 这不是另一个 Claude Code: articles/00-这不是另一个-claude-code.md
+      - 01 pi 不是强成品 agent，而是可编程宿主: articles/01-pi-不是强成品-agent-而是可编程宿主.md
+      - 02 session tree 不是聊天记录，而是 runtime: articles/02-pi-session-tree-不是聊天记录而是-runtime.md
+      - 03 subagent 不是 prompt 分身，而是 runtime 委派: articles/03-pi-subagent-不是-prompt-分身而是-runtime-委派.md
+      - 04 plan mode 不是内建 planner，而是 runtime mode switch: articles/04-pi-plan-mode-不是内建-planner-而是-runtime-mode-switch.md
+      - 05 extension surface 让 agent 产品变成宿主平台: articles/05-pi-extension-surface-让-agent-产品变成宿主平台.md
+      - 06 为什么 pi 代表另一种 agent 产品路线: articles/06-pi-为什么代表另一种-agent-产品路线.md
+  - 配图索引: assets/INDEX.md
+  - 过程材料:
+      - 规划与展开稿索引: guidebook/INDEX.md
+      - 源码细读笔记索引: notes/INDEX.md
