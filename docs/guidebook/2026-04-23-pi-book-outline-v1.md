@@ -247,6 +247,11 @@
 
 这章不需要很长，但要够稳。
 
+### 当前已有材料
+- `docs/guidebook/2026-04-24-pi-ch06-conclusion-expansion-v1.md`
+- `docs/articles/2026-04-24-pi-为什么代表另一种-agent-产品路线-v1.md`
+- `docs/assets/pi-ch06-product-route-conclusion.svg`
+
 ---
 
 ## 当前写作顺序建议
