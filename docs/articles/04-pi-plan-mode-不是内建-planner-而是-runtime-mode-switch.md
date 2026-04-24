@@ -4,28 +4,28 @@
 
 看到 plan mode，最容易产生的误解是：`pi` 也内建了一个 planner agent。
 
-也就是说，用户发起计划模式后，系统把任务交给某个官方 planner 角色，让它先分析，再交回 worker 执行。
+也就是说，用户发起计划模式后，系统把任务交给某个官方 planner 角色。它先分析，再交回 worker 执行。
 
 但 `pi` 的实现不是这个方向。
 
-`pi` 的 plan mode 更像是：
+`pi` 的 plan mode 更接近这样一件事：
 
 > 同一个主 runtime 在“只读探索态”和“执行态”之间切换；切换的不只是 prompt，还有工具池、bash 约束、上下文注入、todo 状态和 session 持久化。
 
-这章要讲的不是 `/plan` 怎么用，而是它在产品路线上的含义。
+这章不讲 `/plan` 怎么用，而是看它在产品路线上的含义。
 
-第 03 章讲 subagent 时，我们看到 `pi` 可以通过 extension 启动独立子 runtime，把任务委派出去。plan mode 则展示了另一条路：不启动子 runtime，而是把当前 runtime 切成另一种工作模式。
+第 03 章讲 subagent 时，我们看到 `pi` 可以通过 extension 启动独立子 runtime，把任务委派出去。plan mode 走的是另一条路：不启动子 runtime，而是把当前 runtime 切成另一种工作模式。
 
-这两条路合起来，正好说明 `pi` 的宿主化不是口号。
+这两条路放在一起，能看出 `pi` 的宿主化不是口号。
 
-它已经展示了至少两种高级工作流外化方式：
+它至少展示了两种高级工作流外化方式：
 
 - subagent：委派型，起独立 runtime；
 - plan mode：模态切换型，改变主 runtime 的行为。
 
 ---
 
-## 1. plan mode 的第一步不是换角色，而是切工具池
+## 1. plan mode 的第一步是切工具池
 
 先看最直接的源码。
 
@@ -48,21 +48,21 @@ if (planModeEnabled) {
 }
 ```
 
-这里的重点很清楚：plan mode 的第一本质不是“换一个 planner 人设”，而是“改变当前 runtime 的可用能力”。
+这里的意思很清楚：plan mode 的第一步不是“换一个 planner 人设”。它先改变当前 runtime 的可用能力。
 
-只读探索态下，`edit` 和 `write` 被拿掉。模型可以读文件、搜索、列目录、问问题，也可以调用 bash，但不能直接修改代码。
+在只读探索态下，`edit` 和 `write` 被拿掉。模型可以读文件、搜索、列目录、问问题，也可以调用 bash，但不能直接改代码。
 
 这和内建 planner agent 的路线不一样。
 
-如果是内建 planner，系统会更强调“由哪个 agent 负责计划”。而 `pi` 这里更强调“当前 runtime 处于什么模式”。
+如果是内建 planner，系统会更强调“由哪个 agent 负责计划”。`pi` 这里强调的是“当前 runtime 处于什么模式”。
 
-所以本章的核心判断可以先落下来：
+所以本章的判断可以先放在这里：
 
-> `pi` 的 plan mode 不是一个官方 planner 角色，而是宿主 runtime 的 mode switch。
+> `pi` 的 plan mode 更像宿主 runtime 的 mode switch，而不是一个官方 planner 角色。
 
 ---
 
-## 2. 只读不是靠模型自觉，而是靠 runtime enforcement
+## 2. 只读靠 runtime enforcement 落地
 
 只把 `edit` / `write` 拿掉还不够。
 
@@ -84,9 +84,7 @@ pi.on("tool_call", async (event) => {
 });
 ```
 
-这段很重要。
-
-它说明 plan mode 不是只在 prompt 里写一句“请不要修改文件”。它真的把 bash 调用放进 runtime 检查里。
+这段代码说明，plan mode 不是只在 prompt 里写一句“请不要修改文件”。它真的把 bash 调用放进 runtime 检查里。
 
 再看 `utils.ts`，`isSafeCommand()` 的逻辑也很直白：
 
@@ -116,13 +114,13 @@ export function isSafeCommand(command: string): boolean {
 - `npm list`、`npm view`、`npm audit`；
 - `rg`、`fd`、`jq`、`sed -n`。
 
-这就把 plan mode 的边界从“模型应该怎么做”，推进到了“宿主允许它怎么做”。
+这样一来，plan mode 的边界就不再只是“模型应该怎么做”，而是“宿主允许它怎么做”。
 
-这点非常关键。
+这点很重要。
 
-因为 agent 系统里，prompt 约束经常是不稳定的。模型可能忘记，也可能为了完成任务绕过去。runtime enforcement 则不同：不在允许范围内的 bash 命令会直接被 block。
+在 agent 系统里，prompt 约束经常不稳定。模型可能忘记，也可能为了完成任务绕过去。runtime enforcement 不一样：不在允许范围内的 bash 命令会直接被 block。
 
-所以 `pi` 的 plan mode 不是单纯的 prompt 技巧，而是宿主层的能力约束。
+所以 `pi` 的 plan mode 不只是 prompt 技巧。它在宿主层约束能力。
 
 ---
 
@@ -165,7 +163,7 @@ Execute each step in order.
 After completing a step, include a [DONE:n] tag in your response.
 ```
 
-这说明 plan mode 里的 prompt 不是一次性写死的 system prompt，而是随着宿主状态变化而变化的 runtime context layer。
+这说明 plan mode 里的 prompt 不是一次性写死的 system prompt。它更像一层会随宿主状态变化的 runtime context。
 
 只读态告诉模型：不要改，输出 `Plan:`。
 
@@ -175,11 +173,11 @@ After completing a step, include a [DONE:n] tag in your response.
 
 planner agent 是一个角色；plan mode 是一组宿主状态。
 
-角色回答“你是谁”；状态回答“当前 runtime 允许你做什么、应该怎么推进、进度保存在哪里”。
+角色回答“你是谁”。状态回答“当前 runtime 允许你做什么、应该怎么推进、进度保存在哪里”。
 
 ---
 
-## 4. 它不是计划生成器，而是计划状态机
+## 4. 从计划文本到计划状态机
 
 如果 plan mode 只是让模型输出一个计划，那它很普通。
 
@@ -208,7 +206,7 @@ let todoItems: TodoItem[] = [];
 11. `turn_end` 解析 `[DONE:n]` 并更新 todo 状态；
 12. 全部完成后，发送 `Plan Complete!`，清空 execution state。
 
-这已经不是“出个计划”的小功能，而是一个完整的 workflow loop。
+这已经超过了“出个计划”的小功能，更接近一个完整的 workflow loop。
 
 它有入口、有受限态、有计划抽取、有用户确认、有执行态、有进度追踪、有完成条件。
 
@@ -216,15 +214,15 @@ let todoItems: TodoItem[] = [];
 
 > `pi` 的 plan mode 是 extension 层实现的轻量 workflow state machine。
 
-这句话对理解 `pi` 很重要。
+这句话对理解 `pi` 很有帮助。
 
-因为它说明高级工作流不一定非要进入 core。只要宿主给了足够多的 hook 和 session 能力，extension 就能自己管理一段工作流生命周期。
+它说明高级工作流不一定非要进入 core。只要宿主给了足够多的 hook 和 session 能力，extension 就能自己管理一段工作流生命周期。
 
 ---
 
 ## 5. `[DONE:n]` 是简单但有效的进度协议
 
-`[DONE:n]` 看起来很朴素，但它在这套机制里承担了一个关键作用：让自然语言执行过程和结构化 todo state 对齐。
+`[DONE:n]` 看起来很朴素，但在这套机制里承担了一个明确职责：让自然语言执行过程和结构化 todo state 对齐。
 
 `utils.ts` 里负责解析：
 
@@ -250,16 +248,16 @@ export function markCompletedSteps(text: string, items: TodoItem[]): number {
 
 它没有复杂协议，也没有额外数据库。模型只要在回复里包含 `[DONE:1]`、`[DONE:2]`，extension 就能把对应 todo 标记完成。
 
-这当然不是最严密的工作流系统，但它很符合 `pi` 当前的定位：用最小机制验证宿主能力。
+这当然不是最严密的工作流系统，但很符合 `pi` 当前的定位：用最小机制验证宿主能力。
 
 更重要的是，`[DONE:n]` 不只是给用户看的文本。它会被 extension 重新解释为状态更新。
 
-也就是说，assistant message 同时承担两层含义：
+也就是说，assistant message 同时有两层含义：
 
 - 对用户：说明完成了什么；
 - 对 extension：携带可解析的 workflow progress signal。
 
-这也是 host/runtime 路线里经常出现的模式：自然语言和结构化状态之间有一层轻量协议。
+这也是 host/runtime 路线里常见的模式：自然语言和结构化状态之间有一层轻量协议。
 
 ---
 
@@ -297,7 +295,7 @@ if (planModeEntry?.data) {
 }
 ```
 
-这说明 plan mode 不是一次性脚本，而是接入了 session runtime。
+这说明 plan mode 不是一次性脚本。它接入了 session runtime。
 
 更细的是 resume 逻辑。
 
@@ -313,7 +311,7 @@ markCompletedSteps(allText, todoItems);
 
 第 02 章我们说：`pi` 的 session 不是聊天记录，而是 runtime log。
 
-plan mode 正好给了一个具体例子：extension 可以把自己的 workflow state 写进 session；恢复时再从 session 里重建当前状态。
+plan mode 给了一个具体例子：extension 可以把自己的 workflow state 写进 session；恢复时再从 session 里重建当前状态。
 
 所以 session 里保存的不只是用户说了什么、模型答了什么，还保存了 extension 认为“当前工作流进行到哪里”。
 
@@ -349,11 +347,11 @@ plan mode 代表的是模态切换型外化：
 - subagent 改变的是“任务由谁来跑”；
 - plan mode 改变的是“当前 runtime 以什么模式跑”。
 
-这对理解 `pi` 很关键。
+这对理解 `pi` 很有帮助。
 
 如果 `pi` 只展示 subagent，我们可能会说：它支持外部委派。
 
-但加上 plan mode 后，判断更稳了：
+加上 plan mode 后，判断更稳：
 
 > `pi` 的 extension surface 不只适合长出新 agent，也适合改造主 agent 自己的运行方式。
 
@@ -380,18 +378,18 @@ plan mode 代表的是模态切换型外化：
 - 把状态写回 session；
 - resume 时重建执行状态。
 
-这一整套行为是 extension 驱动的。
+这一整套行为由 extension 驱动。
 
-所以它再次证明了全书的主线：
+所以它再次接上了全书主线：
 
-> `pi` 的高级工作流不是只能作为官方内建功能出现，也可以作为宿主 runtime 上的一种可编程行为长出来。
+> `pi` 的高级工作流不一定只能做成官方内建功能，也可以作为宿主 runtime 上的一种可编程行为接进来。
 
-这也是 `pi` 和强成品 agent 路线的核心区别。
+这也是 `pi` 和强成品 agent 路线的差异。
 
 强成品 agent 会倾向于把 planner、worker、reviewer 这些能力做成官方角色和官方流程。
 
 `pi` 更像是把 runtime surface 打开，让这些流程在 extension 层自己生长。
 
-plan mode 就是一个很小但很清楚的证据：
+plan mode 是一个很小但很清楚的例子：
 
-> plan 不是另一个人来做，而是同一个 runtime 换了一种工作方式。
+> plan 不是交给另一个人来做；它是同一个 runtime 换了一种工作方式。

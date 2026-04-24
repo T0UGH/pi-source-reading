@@ -2,9 +2,15 @@
 
 ![为什么 pi 代表另一种 agent 产品路线](../assets/pi-ch06-product-route-conclusion.svg)
 
-如果只把 `pi` 当成“又一个 coding agent”，这本书前面几章会显得有点绕。
+如果只把 `pi` 当成“又一个 coding agent”，前面几章会显得有点绕。
 
-为什么要花这么多篇幅讲 session tree？为什么要盯着 subagent 是不是独立 runtime？为什么 plan mode 不写成使用教程，而要反复说它是 mode switch？为什么最后还要把 provider、compaction、UI 这些 surface 收在一起？
+为什么要花这么多篇幅讲 session tree？
+
+为什么要盯着 subagent 是不是独立 runtime？
+
+为什么 plan mode 不写成使用教程，而要反复说它是 mode switch？
+
+为什么最后还要把 provider、compaction、UI 这些 surface 放在一起看？
 
 原因很简单：
 
@@ -30,7 +36,7 @@
 
 > `pi` 的卖点，不是它比 Claude Code 多了什么功能，而是它把 agent 做成了可编程宿主。
 
-回头看，论证链是很清楚的。
+回头看，论证链并不复杂。
 
 第 01 章先定产品定位：
 
@@ -50,7 +56,7 @@
 
 第 04 章看 plan mode：
 
-> plan mode 不是内建 planner，而是主 runtime 在只读探索态和执行态之间切换。
+> plan mode 不是内置 planner，而是主 runtime 在只读探索态和执行态之间切换。
 
 它说明高级工作流不只有“委派”这一种外化方式，也可以是主 runtime 的 mode switch。
 
@@ -84,11 +90,11 @@
 
 这也是 Claude Code / cc 这类路线的优势。
 
-它们把很多关键工作流做进官方 core，用户不需要自己搭太多东西。你接受官方设计，换来的是成熟、稳定、少折腾。
+它们把很多重要工作流做进官方 core，用户不需要自己搭太多东西。你接受官方设计，换来的是成熟、稳定、少折腾。
 
 `pi` 不是这个方向。
 
-它的 core 更克制，很多高级能力不是默认塞进产品主干，而是通过 extension、package、runtime surface 留给用户去长。
+它的 core 更克制。很多高级能力没有默认塞进产品主干，而是通过 extension、package、runtime surface 留给用户去长。
 
 这意味着你得到更高可塑性，也要承担更多复杂度。
 
@@ -118,7 +124,7 @@
 
 对这类用户，`pi` 的价值就很明显。
 
-因为它不是只给你一个现成 assistant，而是给你一个可以继续生长的 agent host。
+它给的不是一个现成 assistant，而是一个可以继续生长的 agent host。
 
 你可以把它当成：
 
@@ -133,13 +139,13 @@
 
 但这正是它的定位。
 
-`pi` 的问题不是“能不能让所有用户更轻松”。
+`pi` 要回答的问题不是“能不能让所有用户更轻松”。
 
-它真正的问题是：
+它真正要回答的是：
 
 > 对那些愿意自己搭系统的人，它能不能给出足够强、足够干净、足够可组合的宿主 surface？
 
-从前面几章看，答案是：值得认真研究。
+从前面几章看，这个问题值得继续研究。
 
 ---
 
@@ -154,10 +160,10 @@
 Claude Code / cc 更像强成品 agent 路线：
 
 - 官方定义主流程；
-- 高级工作流优先内建；
+- 高级工作流优先内置；
 - agent / fork / planner 这些能力更像产品主干的一部分；
 - 用户得到的是更强的默认体验；
-- 代价是核心路线更由官方决定。
+- 代价是主路线更由官方决定。
 
 `pi` 更像可编程宿主路线：
 
@@ -196,11 +202,13 @@ Claude Code 选择了前者，并且做得很强。
 
 如果 project-local agents 可以参与，就要治理 repo-controlled prompt 的信任边界。
 
-这也是为什么第 03 章里 project agents 默认不加载，第 04 章里 plan mode 需要 runtime enforcement，而不是只靠 prompt 自觉。
+这也是为什么第 03 章里 project agents 默认不加载。
 
-宿主路线的本质就是：
+第 04 章里，plan mode 需要 runtime enforcement，而不是只靠 prompt 自觉。
 
-> 你把能力开放出去，也就把治理问题带进来。
+宿主路线的底层逻辑就是：
+
+> 你把能力开放出去，也会把治理问题带进来。
 
 所以 `pi` 不是轻松路线。
 
@@ -218,7 +226,7 @@ Claude Code 选择了前者，并且做得很强。
 
 > `pi` 是一个 minimal terminal coding harness，它的价值不是功能最多，而是把 coding agent 做成可编程宿主。
 
-这个定位里有三个关键词。
+这个定位里有三个词。
 
 ### minimal
 
@@ -254,11 +262,13 @@ session、tool、UI、provider、compaction、lifecycle hook 都是宿主 surfac
 
 如果你想要的是一个官方替你定义好大部分流程的强 agent，Claude Code 这类产品会更直接。
 
-但如果你想研究 agent 产品还能不能做成“宿主”，想把自己的 workflow、provider、权限、UI、compaction 和 session state 接进来，那 `pi` 很值得看。
+但如果你想研究 agent 产品还能不能做成“宿主”，
+想把自己的 workflow、provider、权限、UI、compaction 和 session state 接进来，
+那 `pi` 很值得看。
 
-因为它真正的问题不是：
+它真正要回答的问题不是：
 
-> 我现在内建了多少功能？
+> 我现在内置了多少功能？
 
 而是：
 
