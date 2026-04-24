@@ -1,3 +1,4 @@
+- `pi-ch00-reading-map.svg` - pi 小书总入口：排除功能表误读、提出核心问题并给出 01-06 阅读顺序
 - `pi-ch01-cc-vs-pi-host-vs-product.svg` - Claude Code vs pi：强成品 agent 与可编程宿主对照图
 - `pi-ch02-session-tree-runtime.svg` - pi session tree：从 append-only entry tree 到 active branch runtime context 的结构图
 - `pi-ch03-subagent-runtime-delegation.svg` - pi subagent：主 runtime、extension 调度器与独立子 pi 进程之间的 runtime 委派结构图

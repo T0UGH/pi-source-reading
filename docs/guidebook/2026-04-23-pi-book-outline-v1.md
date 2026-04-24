@@ -62,6 +62,11 @@
 - `packages/coding-agent/README.md`
 - 当前 `docs/guidebook/scope` 文档
 
+### 当前已有材料
+- `docs/guidebook/2026-04-24-pi-ch00-entry-expansion-v1.md`
+- `docs/articles/2026-04-24-pi-这不是另一个-claude-code-v1.md`
+- `docs/assets/pi-ch00-reading-map.svg`
+
 ---
 
 ## 01
