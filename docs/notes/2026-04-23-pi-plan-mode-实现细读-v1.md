@@ -217,10 +217,10 @@
 
 ---
 
-## 后续继续读什么
+## 后续已完成情况
 
-下一轮更适合补：
+这轮细读后，后续已经补齐：
 
-1. `custom-provider-*`，验证 provider 可编程到底是不是平台级能力
-2. extension runner / agent session 的 stale runtime 与 rebind 关系，补“宿主为什么必须治理生命周期”这条线
-3. 再回头开始写第一篇正文，而不是继续无限拆 examples
+1. `custom-provider-*` 与 extension surface 线索已收进第 05 章；
+2. extension runner / agent session 的治理问题已收进第 05、06 章；
+3. 主体小书正文已按 `00-06` 补齐，不再停留在“继续拆 examples”的阶段。

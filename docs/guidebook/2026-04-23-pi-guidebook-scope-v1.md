@@ -28,6 +28,8 @@
 
 ## 小书形态
 
+主体小书当前为 `00-06`：
+
 ### 00 总入口
 这不是另一个 Claude Code：为什么 pi 值得单独研究
 
@@ -41,7 +43,13 @@ pi 不是强成品 agent，而是可编程宿主
 pi 的 subagent 不是 prompt 分身，而是独立 runtime 的委派
 
 ### 04
-当 tool、UI、provider、compaction 都变成 extension surface，agent 产品会变成什么
+plan mode 不是内建 planner，而是宿主切出来的一种工作模式
+
+### 05
+当 tool、UI、provider、compaction 都能外化，agent 产品会变成什么
+
+### 06
+为什么 pi 代表另一种 agent 产品路线
 
 ## 总论点
 
