@@ -196,10 +196,10 @@
 
 ---
 
-## 后续继续读什么
+## 后续已完成情况
 
-下一轮如果继续沿这条线推进，最值得补的是：
+这一轮留下的三个补充点，已经在后续章节中处理：
 
-1. `renderResult()` 这一层的 UI 设计，看看宿主怎样把 subagent 结果重新做成主会话可读对象
-2. `plan-mode` 示例，对比它和 subagent 都在 extension 层，分别代表哪两种工作流外化路线
-3. `custom-provider-*`，验证 provider 也确实是宿主层可长能力，而不是 README 口号
+1. `renderResult()` 这类 UI 回填问题，已作为“宿主把子 runtime 结果重新组织给主会话”的证据，进入第 03 章；
+2. `plan-mode` 示例已单独写成第 04 章，用来和 subagent 对照：前者是 mode switch，后者是 runtime delegation；
+3. `custom-provider-*` 与 provider 外化问题，已进入第 05 章，用来证明 extension surface 不只覆盖工具，也覆盖模型接入与宿主能力扩展。

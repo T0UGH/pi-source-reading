@@ -29,6 +29,11 @@
 
 - `docs/assets/INDEX.md`
 
+## Process material indexes
+
+- `docs/guidebook/INDEX.md`
+- `docs/notes/INDEX.md`
+
 ## Tracks / raw notes
 
 - `notes/runtime/pi-runtime-overview.md`

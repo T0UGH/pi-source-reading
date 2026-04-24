@@ -55,24 +55,16 @@
 
 ### 规划与展开稿
 
-- [`docs/guidebook/2026-04-23-pi-guidebook-scope-v1.md`](docs/guidebook/2026-04-23-pi-guidebook-scope-v1.md)
-- [`docs/guidebook/2026-04-23-pi-book-outline-v1.md`](docs/guidebook/2026-04-23-pi-book-outline-v1.md)
-- [`docs/guidebook/2026-04-23-pi-writing-cards-v1.md`](docs/guidebook/2026-04-23-pi-writing-cards-v1.md)
+- [`docs/guidebook/INDEX.md`](docs/guidebook/INDEX.md)
 
 ### 源码细读笔记
 
-- [`docs/notes/2026-04-23-pi-vs-cc-差异点初判.md`](docs/notes/2026-04-23-pi-vs-cc-差异点初判.md)
-- [`docs/notes/2026-04-23-pi-extension-runtime-初读.md`](docs/notes/2026-04-23-pi-extension-runtime-初读.md)
-- [`docs/notes/2026-04-23-pi-session-runtime-初读.md`](docs/notes/2026-04-23-pi-session-runtime-初读.md)
-- [`docs/notes/2026-04-23-pi-subagent-实现细读-v1.md`](docs/notes/2026-04-23-pi-subagent-实现细读-v1.md)
-- [`docs/notes/2026-04-23-pi-plan-mode-实现细读-v1.md`](docs/notes/2026-04-23-pi-plan-mode-实现细读-v1.md)
+- [`docs/notes/INDEX.md`](docs/notes/INDEX.md)
 
 ---
 
 ## 当前状态
 
-主体小书 `00-06` 已补齐。后续重点不再是继续加章节，而是：
+主体小书 `00-06` 已补齐，正文命名、阅读入口、过程材料索引和过期规划文案已经完成一次收口。
 
-1. 统一文件命名与章节顺序；
-2. 清理过期规划文案；
-3. 视需要补站点/导航/发布入口。
+后续若进入发布层整理，重点会是站点导航、首页摘要图或面向外部读者的发布说明。

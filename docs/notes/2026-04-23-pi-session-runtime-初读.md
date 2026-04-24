@@ -79,9 +79,10 @@
 
 ---
 
-## 后续继续读什么
+## 后续已完成情况
 
-下一轮重点继续追：
-- `AgentSession` 里 extension runner 如何失效 / 重新绑定
-- stale instance 机制为什么是宿主路线必须处理的问题
-- tree session 和 subagent / handoff 的关系还能不能继续往外推
+这一轮留下的追问，已经分别进入后续章节：
+
+- `AgentSession` 里 extension runner 的失效 / 重新绑定，已成为第 05 章讨论宿主治理面的材料；
+- stale instance 机制，已用于说明宿主路线必须面对长期 runtime 的状态一致性问题；
+- tree session 和 subagent / handoff 的关系，已在第 02、03 章中收束为“session tree 是 runtime 委派的底座”。

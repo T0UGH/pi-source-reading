@@ -66,9 +66,10 @@
 
 ---
 
-## 后续继续读什么
+## 后续已完成情况
 
-下一轮继续重点验证：
-- `ExtensionRunner` 和 `AgentSession` 的绑定方式
-- stale runtime / session replacement 的治理逻辑
-- compaction hook 是不是已经足够说明“运行时宿主化”
+这一轮留下的验证点，已经在后续章节中收束：
+
+- `ExtensionRunner` 和 `AgentSession` 的绑定方式，已进入第 05 章的 extension surface 论证；
+- stale runtime / session replacement 的治理逻辑，已作为“宿主必须治理长期 runtime”的证据收进第 05、06 章；
+- compaction hook 已用于说明 `pi` 不是只开放工具，而是把 session lifecycle 也外化给 extension。
