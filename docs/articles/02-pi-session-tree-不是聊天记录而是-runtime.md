@@ -2,7 +2,7 @@
 
 ![pi 的 session tree runtime](../assets/pi-ch02-session-tree-runtime.svg)
 
-如果你把 agent 只当成聊天机器人，session 很自然就是一条聊天记录：用户一句，助手一句，再接着下一轮。
+如果你只把 agent 当成聊天机器人，session 很自然就是一条聊天记录：用户一句，助手一句，再接着下一轮。
 
 但做过稍微长一点的 agent 任务就会发现，真实工作很少是一条直线。你可能会遇到这些情况：
 
@@ -12,15 +12,15 @@
 - 扩展系统需要把自己的状态写进 session，重启后还能恢复；
 - 想把当前任务中的一个中间节点拆出去，变成另一个独立任务。
 
-这些都不是“聊天记录管理”能舒服解决的问题。聊天记录默认只有一条时间线；agent 工作需要的是可以分叉、恢复、压缩和迁移的运行时状态。
+这些都不是“聊天记录管理”能顺手解决的问题。聊天记录默认只有一条时间线；agent 工作需要的是可以分叉、恢复、压缩和迁移的运行时状态。
 
 这就是 `pi` 把 session 做成树的原因。更准确地说：
 
-> `pi` 的 session tree 不是为了让历史记录看起来更酷，而是为了把一次 agent 工作保存成可分叉、可回放、可压缩、可被扩展系统注入状态的 runtime log。
+> `pi` 的 session tree 不是为了让历史记录看起来更酷。它要把一次 agent 工作保存成可分叉、可回放、可压缩、可被扩展系统注入状态的 runtime log。
 
-这也是它和 Claude Code 的差异继续往下落的一层。
+这也是它和 Claude Code 的差异继续往下落到源码层的一步。
 
-第 01 章说过，`pi` 不是一个“强成品 agent”，更像一个可编程宿主。到了 session 这一层，这个判断变得很具体：它没有把 session 当 transcript，而是当 runtime state。
+第 01 章说过，`pi` 不是一个“强成品 agent”，更像一个可编程宿主。到了 session 这一层，这个判断变得很具体：它没有把 session 当 transcript，处理方式更接近 runtime state。
 
 ---
 
@@ -39,7 +39,7 @@ export interface SessionEntryBase {
 }
 ```
 
-这里要看的是 `parentId`。
+这里真正要看的是 `parentId`。
 
 它不是 UI 层为了展示树形结构临时算出来的，也不是 `/tree` 命令额外维护的一份索引。它就是每个 session entry 的基础字段。
 
@@ -54,7 +54,7 @@ export interface SessionEntryBase {
 - `label`：用户给某个节点打的标记；
 - `session_info`：session 的元信息。
 
-这意味着，`pi` 记录的不是“用户消息和助手消息列表”，而是一棵由多种运行时事件组成的树。
+`pi` 记录的不是“用户消息和助手消息列表”，是一棵由多种运行时事件组成的树。
 
 如果只看表层 UI，你可能会觉得这是一个支持分支浏览的聊天工具；但从数据结构看，它保存的是 agent runtime 的演化过程。
 
@@ -62,7 +62,7 @@ export interface SessionEntryBase {
 
 ## 2. 每次 append，都是接到当前 leaf 后面
 
-普通聊天记录的追加逻辑很简单：把新消息 push 到数组末尾。
+普通聊天记录的追加逻辑很简单：把新消息 push 到数组末尾就行。
 
 `pi` 的追加逻辑多了一层：新 entry 会接到当前 `leafId` 后面。
 
@@ -82,22 +82,22 @@ appendMessage(message) {
 }
 ```
 
-`parentId: this.leafId` 这行说明，每一条新消息都不是简单地“排在最后”，而是“挂在当前 leaf 节点下面”。随后 `_appendEntry()` 会把这条 entry 放进 `fileEntries`、更新 `byId` 索引，并把 `leafId` 推进到新 entry。
+`parentId: this.leafId` 这行说明，每一条新消息都不是简单地“排在最后”，而会“挂在当前 leaf 节点下面”。随后 `_appendEntry()` 会把这条 entry 放进 `fileEntries`、更新 `byId` 索引，并把 `leafId` 推进到新 entry。
 
 所以 `pi` 的 session 有两个视角：
 
 - 文件视角：entry 仍然是 append-only 地写进 JSONL；
 - 结构视角：每个 entry 通过 `parentId` 组成一棵树。
 
-这有点像 git commit：文件里的对象可以按时间被写入，但真正表达历史关系的是 parent。
+这有点像 git commit：文件里的对象可以按时间写入，但真正表达历史关系的是 parent。
 
 这个比喻不完全等价，但足够说明 `pi` 为什么不是线性 transcript。
 
 ---
 
-## 3. 模型看到的不是整棵树，而是当前 branch
+## 3. 模型只看到当前 branch，不会吃下整棵树
 
-既然存储层保存的是一棵树，那每次调用模型时，模型到底看到什么？
+既然存储层保存的是一棵树，那每次调用模型时，模型到底会看到什么？
 
 答案是：当前 leaf 回溯到 root 的那条路径。
 
@@ -111,9 +111,9 @@ while (current) {
 }
 ```
 
-也就是说，`pi` 会从当前 leaf 往上沿着 `parentId` 找父节点，直到 root。再把这条路径按正序整理成 path。
+`pi` 会从当前 leaf 往上沿着 `parentId` 找父节点，直到 root。然后再把这条路径按正序整理成 path。
 
-于是就形成了一个分层：
+这样就形成了一个分层：
 
 1. session 文件保存整棵树；
 2. 当前 leaf 决定 active branch；
@@ -121,13 +121,13 @@ while (current) {
 
 所以树不是“每次都把所有历史塞给模型”。正好相反，树让 `pi` 可以保存更多可能性，但每次只选择其中一条运行路径给模型。
 
-这也是它比普通聊天记录更像 runtime 的地方。
+这也是它比普通聊天记录更接近 runtime 的地方。
 
 聊天记录只有一个“现在”；session tree 可以保留多个曾经尝试过、但并不处在当前 active path 上的“可能性”。
 
 ---
 
-## 4. branch 不是删除历史，而是移动 leaf
+## 4. branch 的动作是移动 leaf
 
 再看分支。
 
@@ -142,7 +142,7 @@ branch(branchFromId: string): void {
 }
 ```
 
-它做的事不是删除后面的消息，也不是复制一份完整聊天记录，而是把当前 `leafId` 移到指定 entry。
+它没有删除后面的消息，也没有复制一份完整聊天记录，只是把当前 `leafId` 移到指定 entry。
 
 下一次 `appendXXX()` 时，新 entry 就会以这个节点为 parent，形成一条新分支。
 
@@ -152,11 +152,11 @@ branch(branchFromId: string): void {
 
 这句话基本就是 `pi` session tree 的精神：
 
-> 分支不是改写过去，而是在旧节点上长出新的未来。
+> 分支不是改写过去，是在旧节点上长出新的未来。
 
 对于 agent 工作来说，这个能力很重要。
 
-因为很多时候你不是想“撤销历史”，而是想保留已有探索，同时从中间某个判断点重新开始。线性聊天记录要么只能继续往后写，要么只能复制一大段文本重开。`pi` 则把这个动作变成了 runtime 原语。
+很多时候你不是想“撤销历史”，你想保留已有探索，同时从中间某个判断点重新开始。线性聊天记录要么继续往后写，要么复制一大段文本重开。`pi` 则把这个动作变成了 runtime 原语。
 
 ---
 
@@ -171,7 +171,7 @@ const path = this.getBranch(leafId);
 const pathWithoutLabels = path.filter((e) => e.type !== "label");
 ```
 
-也就是说，它不是把整棵树复制出去，而是拿到 root 到目标 leaf 的那条 branch。
+它不是把整棵树复制出去，只拿到 root 到目标 leaf 的那条 branch。
 
 然后它创建新的 session header，把这条 path 写入新的 JSONL 文件：
 
@@ -179,7 +179,7 @@ const pathWithoutLabels = path.filter((e) => e.type !== "label");
 this.fileEntries = [header, ...pathWithoutLabels, ...labelEntries];
 ```
 
-这件事很像“从当前仓库历史中切一条干净分支出来”。旁支仍然留在原 session；新 session 只携带这次运行需要的上下文路径。
+这件事很像“从当前仓库历史中切一条干净分支出来”。旁支仍然留在原 session；新 session 只带走这次运行需要的上下文路径。
 
 这也解释了为什么 `/fork` 不是一个普通 UI 功能。它背后需要 session manager 知道：
 
@@ -193,11 +193,11 @@ this.fileEntries = [header, ...pathWithoutLabels, ...labelEntries];
 
 ---
 
-## 6. compaction 不是抹掉历史，而是改变 active branch 的编译方式
+## 6. compaction 改变 active branch 的编译方式
 
-长任务一定会遇到上下文过长的问题。很多 agent 的处理方式是：把旧消息总结一下，然后把原始历史丢掉。
+长任务一定会遇到上下文过长的问题。很多 agent 的处理方式是：把旧消息总结一下，再把原始历史丢掉。
 
-`pi` 的 compaction 更像是在树上追加一个新的运行时事件。
+`pi` 的 compaction 更像是在树上追加一个新的 runtime event。
 
 `CompactionEntry` 包含：
 
@@ -212,7 +212,7 @@ export interface CompactionEntry<T = unknown> extends SessionEntryBase {
 }
 ```
 
-注意它仍然继承 `SessionEntryBase`，也就是说它也有 `id`、`parentId`、`timestamp`。
+注意它仍然继承 `SessionEntryBase`，所以也有 `id`、`parentId`、`timestamp`。
 
 `buildSessionContext()` 遇到 compaction 时，会先加入 summary，再从 `firstKeptEntryId` 开始保留一段消息，最后接上 compaction 之后的消息。
 
@@ -223,7 +223,7 @@ export interface CompactionEntry<T = unknown> extends SessionEntryBase {
 3. 从 `firstKeptEntryId` 开始追加被保留的旧消息；
 4. 再追加 compaction 之后的新消息。
 
-这说明 compaction 没有把 session history 粗暴改写成一段摘要。它改变的是：
+compaction 没有把 session history 粗暴改写成一段摘要。它改的是：
 
 > 当前 active branch 被编译给模型时，哪些历史以摘要形式出现，哪些历史仍以原消息形式出现。
 
@@ -245,7 +245,7 @@ export interface CompactionEntry<T = unknown> extends SessionEntryBase {
 
 如果扩展希望向模型上下文注入内容，则使用 `custom_message`。它同样是 session entry，但会在 `buildSessionContext()` 中被转换成 user message。
 
-这两个设计放在一起看，就能看出 `pi` 的宿主味道：
+这两个设计放在一起，`pi` 的宿主味道就出来了：
 
 - 扩展可以保存自己的私有状态；
 - 扩展也可以向模型注入内容；
@@ -256,11 +256,11 @@ export interface CompactionEntry<T = unknown> extends SessionEntryBase {
 
 ---
 
-## 8. session 切换不是换文件，而是替换 runtime
+## 8. session 切换会替换 runtime
 
 最后看 `agent-session-runtime.ts`。
 
-`switchSession()`、`newSession()`、`fork()` 都不是简单地换一个 session 文件路径。它们大体遵循同一套流程：
+`switchSession()`、`newSession()`、`fork()` 都不是简单换一个 session 文件路径。它们大体遵循同一套流程：
 
 1. 触发 `session_before_switch` 或 `session_before_fork`；
 2. 如果 hook 取消，则停止；
@@ -271,7 +271,7 @@ export interface CompactionEntry<T = unknown> extends SessionEntryBase {
 
 比如 `fork()` 里会先调用 `emitBeforeFork()`，再根据目标位置创建 branched session，随后 teardown 当前 session，并 `createRuntime()` / `apply()` 新 runtime。
 
-这说明 session tree 的影响范围不止是历史记录。它还牵动：
+session tree 影响的不止历史记录。它还牵动：
 
 - cwd；
 - session file；
@@ -288,7 +288,7 @@ export interface CompactionEntry<T = unknown> extends SessionEntryBase {
 
 这一章不是要说 `pi` 比 Claude Code 更强。
 
-更准确的对比是：
+更合适的对比是：
 
 - Claude Code 更像一个设计完整的驾驶舱，它把很多高级工作流做成了产品内建体验；
 - `pi` 更像一套可编程底盘，它把工作流的可变部分下沉到 session、runtime、extension 这些宿主能力里。
@@ -297,7 +297,7 @@ export interface CompactionEntry<T = unknown> extends SessionEntryBase {
 
 它值得看的地方是：`pi` 把 agent 工作中的分叉、回溯、压缩、扩展状态、session 迁移，都放在同一套 runtime log 里表达。
 
-这就是“可编程宿主”在 session 层的具体样子。
+这就是“可编程宿主”落到 session 层后的样子。
 
 ---
 
@@ -305,7 +305,7 @@ export interface CompactionEntry<T = unknown> extends SessionEntryBase {
 
 `pi` 为什么不把 session 做成普通聊天记录？
 
-因为它要表达的不是一段聊天，而是一段可以继续生长的 agent 工作过程。
+因为它要表达的不是一段聊天，是一段可以继续生长的 agent 工作过程。
 
 线性聊天记录只能回答：
 
@@ -321,11 +321,11 @@ session tree 能回答更多问题：
 
 这就是第 02 章要落下来的判断：
 
-> `pi` 的 session tree 不是聊天记录功能，而是 agent runtime 的底座能力。
+> `pi` 的 session tree 不是聊天记录功能，是 agent runtime 的底座能力。
 
-从这一层开始，`pi` 和 Claude Code 的差异就不只是产品形态差异了，而是“工作流能力放在哪里”的差异：
+从这一层开始，`pi` 和 Claude Code 的差异就不止是产品形态不同，还包括“工作流能力放在哪里”：
 
 - Claude Code 倾向于把能力收进成品 agent；
 - `pi` 倾向于把能力开放在宿主 runtime。
 
-这也解释了为什么 `pi` 对会自己搭 agent 工作台的人更有研究价值：它暴露出来的不是一个更强的聊天界面，而是一套可分叉、可恢复、可扩展的 agent 工作现场。
+这也解释了为什么 `pi` 对会自己搭 agent 工作台的人更有研究价值：它暴露出来的不是更强聊天界面，是一套可分叉、可恢复、可扩展的 agent 工作现场。

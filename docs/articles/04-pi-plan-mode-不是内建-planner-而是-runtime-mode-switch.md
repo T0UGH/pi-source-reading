@@ -4,21 +4,19 @@
 
 看到 plan mode，最容易产生的误解是：`pi` 也内建了一个 planner agent。
 
-也就是说，用户发起计划模式后，系统把任务交给某个官方 planner 角色。它先分析，再交回 worker 执行。
+按这个理解，用户发起计划模式后，系统会把任务交给某个官方 planner 角色。它先分析，再交回 worker 执行。
 
 但 `pi` 的实现不是这个方向。
 
 `pi` 的 plan mode 更接近这样一件事：
 
-> 同一个主 runtime 在“只读探索态”和“执行态”之间切换；切换的不只是 prompt，还有工具池、bash 约束、上下文注入、todo 状态和 session 持久化。
+> 同一个主 runtime 在“只读探索态”和“执行态”之间切换；切换范围从 prompt 扩展到工具池、bash 约束、上下文注入、todo 状态和 session 持久化。
 
-这章不讲 `/plan` 怎么用，而是看它在产品路线上的含义。
+这一章不讲 `/plan` 怎么用，而是看它在产品路线上的含义。
 
 第 03 章讲 subagent 时，我们看到 `pi` 可以通过 extension 启动独立子 runtime，把任务委派出去。plan mode 走的是另一条路：不启动子 runtime，而是把当前 runtime 切成另一种工作模式。
 
-这两条路放在一起，能看出 `pi` 的宿主化不是口号。
-
-它至少展示了两种高级工作流外化方式：
+这两条路放在一起看，`pi` 的宿主化就不是一句口号。它至少展示了两种高级工作流外化方式：
 
 - subagent：委派型，起独立 runtime；
 - plan mode：模态切换型，改变主 runtime 的行为。
@@ -27,7 +25,7 @@
 
 ## 1. plan mode 的第一步是切工具池
 
-先看最直接的源码。
+先看最直接的一段源码。
 
 `packages/coding-agent/examples/extensions/plan-mode/index.ts` 里有两组工具池：
 
@@ -48,7 +46,7 @@ if (planModeEnabled) {
 }
 ```
 
-这里的意思很清楚：plan mode 的第一步不是“换一个 planner 人设”。它先改变当前 runtime 的可用能力。
+这里的意思很清楚：plan mode 的第一步不是“换一个 planner 人设”，而是先改变当前 runtime 的可用能力。
 
 在只读探索态下，`edit` 和 `write` 被拿掉。模型可以读文件、搜索、列目录、问问题，也可以调用 bash，但不能直接改代码。
 
@@ -56,7 +54,7 @@ if (planModeEnabled) {
 
 如果是内建 planner，系统会更强调“由哪个 agent 负责计划”。`pi` 这里强调的是“当前 runtime 处于什么模式”。
 
-所以本章的判断可以先放在这里：
+本章的判断可以先放在这里：
 
 > `pi` 的 plan mode 更像宿主 runtime 的 mode switch，而不是一个官方 planner 角色。
 
@@ -68,7 +66,7 @@ if (planModeEnabled) {
 
 因为 bash 仍然可能修改文件。比如 `rm`、`mv`、`git reset`、`npm install`、`chmod`、重定向写文件，都可能破坏“只读探索”的边界。
 
-所以 plan mode 又在 `tool_call` hook 上拦截 bash：
+plan mode 又在 `tool_call` hook 上拦截 bash：
 
 ```ts
 pi.on("tool_call", async (event) => {
@@ -116,11 +114,11 @@ export function isSafeCommand(command: string): boolean {
 
 这样一来，plan mode 的边界就不再只是“模型应该怎么做”，而是“宿主允许它怎么做”。
 
-这点很重要。
+这个差别落在执行边界上。
 
 在 agent 系统里，prompt 约束经常不稳定。模型可能忘记，也可能为了完成任务绕过去。runtime enforcement 不一样：不在允许范围内的 bash 命令会直接被 block。
 
-所以 `pi` 的 plan mode 不只是 prompt 技巧。它在宿主层约束能力。
+`pi` 的 plan mode 因而不是单纯的 prompt 技巧，它在宿主层约束能力。
 
 ---
 
@@ -128,7 +126,7 @@ export function isSafeCommand(command: string): boolean {
 
 工具池和 bash allowlist 解决的是“能做什么”。
 
-但模型还需要知道当前处于什么模式、应该输出什么格式。这个由 `before_agent_start` hook 完成。
+但模型还需要知道当前处于什么模式、应该输出什么格式。这件事由 `before_agent_start` hook 完成。
 
 在只读探索态下，extension 会注入一段隐藏上下文：
 
@@ -163,13 +161,13 @@ Execute each step in order.
 After completing a step, include a [DONE:n] tag in your response.
 ```
 
-这说明 plan mode 里的 prompt 不是一次性写死的 system prompt。它更像一层会随宿主状态变化的 runtime context。
+这说明 plan mode 里的 prompt 不是一次性写死的 system prompt，而是一层会随宿主状态变化的 runtime context。
 
 只读态告诉模型：不要改，输出 `Plan:`。
 
 执行态告诉模型：现在有完整工具访问，按 remaining steps 执行，并用 `[DONE:n]` 标记进度。
 
-这和“planner agent”很不一样。
+这和“planner agent”不是一回事。
 
 planner agent 是一个角色；plan mode 是一组宿主状态。
 
@@ -181,7 +179,7 @@ planner agent 是一个角色；plan mode 是一组宿主状态。
 
 如果 plan mode 只是让模型输出一个计划，那它很普通。
 
-`pi` 这里真正有意思的是：它把计划变成了一个小型状态机。
+`pi` 这里更有意思的地方在于：它把计划变成了一个小型状态机。
 
 源码里至少有三个状态变量：
 
@@ -191,7 +189,7 @@ let executionMode = false;
 let todoItems: TodoItem[] = [];
 ```
 
-围绕这三个变量，状态推进链大概是这样：
+围绕这三个变量，状态大概这样推进：
 
 1. 用户通过 `/plan`、`--plan` 或 `Ctrl+Alt+P` 进入 plan mode；
 2. extension 把工具池切到 `PLAN_MODE_TOOLS`；
@@ -206,17 +204,15 @@ let todoItems: TodoItem[] = [];
 11. `turn_end` 解析 `[DONE:n]` 并更新 todo 状态；
 12. 全部完成后，发送 `Plan Complete!`，清空 execution state。
 
-这已经超过了“出个计划”的小功能，更接近一个完整的 workflow loop。
+这已经不是“出个计划”的小功能，更接近一个完整的 workflow loop。
 
 它有入口、有受限态、有计划抽取、有用户确认、有执行态、有进度追踪、有完成条件。
 
-所以更准确的说法是：
+更准确的说法是：
 
 > `pi` 的 plan mode 是 extension 层实现的轻量 workflow state machine。
 
-这句话对理解 `pi` 很有帮助。
-
-它说明高级工作流不一定非要进入 core。只要宿主给了足够多的 hook 和 session 能力，extension 就能自己管理一段工作流生命周期。
+这个说法对理解 `pi` 很有帮助：高级工作流不一定非要进入 core。只要宿主给了足够多的 hook 和 session 能力，extension 就能自己管理一段工作流生命周期。
 
 ---
 
@@ -248,11 +244,9 @@ export function markCompletedSteps(text: string, items: TodoItem[]): number {
 
 它没有复杂协议，也没有额外数据库。模型只要在回复里包含 `[DONE:1]`、`[DONE:2]`，extension 就能把对应 todo 标记完成。
 
-这当然不是最严密的工作流系统，但很符合 `pi` 当前的定位：用最小机制验证宿主能力。
+这不是最严密的工作流系统，但很符合 `pi` 当前的定位：用尽量小的机制验证宿主能力。
 
-更重要的是，`[DONE:n]` 不只是给用户看的文本。它会被 extension 重新解释为状态更新。
-
-也就是说，assistant message 同时有两层含义：
+`[DONE:n]` 也不是只给用户看的文本。它会被 extension 重新解释为状态更新。assistant message 同时有两层含义：
 
 - 对用户：说明完成了什么；
 - 对 extension：携带可解析的 workflow progress signal。
@@ -263,7 +257,7 @@ export function markCompletedSteps(text: string, items: TodoItem[]): number {
 
 ## 6. 计划状态被写回 session，而不是只放在内存里
 
-如果 plan mode 的状态只存在内存里，重启 session 就全丢了。
+如果 plan mode 的状态只存在内存里，重启 session 后就全丢了。
 
 `pi` 没这么做。
 
@@ -279,7 +273,7 @@ function persistState(): void {
 }
 ```
 
-也就是说，plan mode 会把自己的状态写成 custom entry，追加到 session 里。
+plan mode 会把自己的状态写成 custom entry，追加到 session 里。
 
 再看 `session_start`：
 
@@ -307,13 +301,13 @@ const allText = messages.map(getTextContent).join("\n");
 markCompletedSteps(allText, todoItems);
 ```
 
-这点和第 02 章 session tree 能接上。
+这一点可以和第 02 章的 session tree 接上。
 
-第 02 章我们说：`pi` 的 session 不是聊天记录，而是 runtime log。
+第 02 章说过：`pi` 的 session 不是聊天记录，而是 runtime log。
 
 plan mode 给了一个具体例子：extension 可以把自己的 workflow state 写进 session；恢复时再从 session 里重建当前状态。
 
-所以 session 里保存的不只是用户说了什么、模型答了什么，还保存了 extension 认为“当前工作流进行到哪里”。
+session 里保存了用户说了什么、模型答了什么，也保存了 extension 认为“当前工作流进行到哪里”。
 
 这就是宿主路线。
 
@@ -321,7 +315,7 @@ plan mode 给了一个具体例子：extension 可以把自己的 workflow state
 
 ## 7. 和 subagent 合起来看：两种外化路线
 
-现在可以把第 03 章和第 04 章放在一起看。
+现在可以把第 03 章和第 04 章放到一起看。
 
 subagent 代表的是委派型外化：
 
@@ -347,11 +341,11 @@ plan mode 代表的是模态切换型外化：
 - subagent 改变的是“任务由谁来跑”；
 - plan mode 改变的是“当前 runtime 以什么模式跑”。
 
-这对理解 `pi` 很有帮助。
+这对理解 `pi` 很有帮助：
 
-如果 `pi` 只展示 subagent，我们可能会说：它支持外部委派。
+如果 `pi` 只展示 subagent，我们可能只会说：它支持外部委派。
 
-加上 plan mode 后，判断更稳：
+加上 plan mode 后，这个判断更稳：
 
 > `pi` 的 extension surface 不只适合长出新 agent，也适合改造主 agent 自己的运行方式。
 
@@ -365,7 +359,7 @@ plan mode 代表的是模态切换型外化：
 
 它不是一个内建 planner agent。
 
-它更像是一段 host behavior：
+它更像一段 host behavior：
 
 - 进入只读探索态；
 - 限制工具池；
@@ -380,7 +374,7 @@ plan mode 代表的是模态切换型外化：
 
 这一整套行为由 extension 驱动。
 
-所以它再次接上了全书主线：
+它再次接上了全书的主线：
 
 > `pi` 的高级工作流不一定只能做成官方内建功能，也可以作为宿主 runtime 上的一种可编程行为接进来。
 
@@ -388,7 +382,7 @@ plan mode 代表的是模态切换型外化：
 
 强成品 agent 会倾向于把 planner、worker、reviewer 这些能力做成官方角色和官方流程。
 
-`pi` 更像是把 runtime surface 打开，让这些流程在 extension 层自己生长。
+`pi` 更像是把 runtime surface 打开，让这些流程在 extension 层生长。
 
 plan mode 是一个很小但很清楚的例子：
 

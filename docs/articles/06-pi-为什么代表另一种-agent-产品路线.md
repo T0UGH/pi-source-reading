@@ -14,15 +14,15 @@
 
 原因很简单：
 
-> `pi` 最值得看的，不是它现在有哪些功能，而是它把 agent 产品做成了另一种形态。
+> `pi` 最值得看的，不在它现在有哪些功能，而在它把 agent 产品做成了另一种形态。
 
 它不是在和 Claude Code 做同一张功能表上的逐项竞争。
 
 它更像是在回答另一个问题：
 
-> 如果不把所有高级工作流都做进官方 core，而是把 agent 做成一个可编程宿主，会得到什么？又会失去什么？
+> 如果不把所有高级工作流都做进官方 core，改把 agent 做成一个可编程宿主，会得到什么？又会失去什么？
 
-这就是结语要收住的判断。
+结语就收在这个判断上。
 
 ---
 
@@ -32,11 +32,11 @@
 
 它没有逐条讲命令，没有做 provider 大全，也没有把 monorepo 每个 package 都拆一遍。
 
-前面五章其实只服务一句话：
+前面五章都在服务一句话：
 
-> `pi` 的卖点，不是它比 Claude Code 多了什么功能，而是它把 agent 做成了可编程宿主。
+> `pi` 的卖点，不在比 Claude Code 多了什么功能，而在把 agent 做成了可编程宿主。
 
-回头看，论证链并不复杂。
+回头看，这条论证链并不复杂。
 
 第 01 章先定产品定位：
 
@@ -44,29 +44,27 @@
 
 第 02 章把这个判断落到 session 层：
 
-> `pi` 的 session tree 不是聊天记录，而是 runtime state。
+> `pi` 的 session tree 不是聊天记录，它承担 runtime state。
 
 它用 `id + parentId` 保存工作过程，让分叉、恢复、压缩、custom entry 都有了底座。
 
 第 03 章看 subagent：
 
-> subagent 不是 prompt 分身，而是 extension 层启动独立 `pi` runtime 的委派机制。
+> subagent 不是 prompt 分身，它是 extension 层启动独立 `pi` runtime 的委派机制。
 
-它说明高级工作流可以不写进 core，而是长在 extension 层。
+它说明高级工作流可以离开 core，长在 extension 层。
 
 第 04 章看 plan mode：
 
-> plan mode 不是内置 planner，而是主 runtime 在只读探索态和执行态之间切换。
+> plan mode 不是内置 planner，它是主 runtime 在只读探索态和执行态之间切换。
 
 它说明高级工作流不只有“委派”这一种外化方式，也可以是主 runtime 的 mode switch。
 
 第 05 章把 surface 收起来：
 
-> 当 tool、UI、provider、compaction、session lifecycle 都能外化，agent 产品就不只是固定功能集合，而更像宿主平台。
+> 当 tool、UI、provider、compaction、session lifecycle 都能外化，agent 产品就会从固定功能集合，转向宿主平台。
 
-所以这本书真正想说的，不是“`pi` 某个功能很酷”。
-
-而是：
+这本书真正想说的，也不是“`pi` 某个功能很酷”。
 
 > `pi` 在尝试把 agent 从强成品产品，反过来做成可继续生长的宿主。
 
@@ -74,7 +72,7 @@
 
 ## 2. 它不是为了所有人
 
-这个判断要讲清楚，否则很容易把 `pi` 写成宣传稿。
+这个判断要讲清楚，不然很容易把 `pi` 写成宣传稿。
 
 `pi` 这条路线不一定适合所有人。
 
@@ -90,19 +88,17 @@
 
 这也是 Claude Code / cc 这类路线的优势。
 
-它们把很多重要工作流做进官方 core，用户不需要自己搭太多东西。你接受官方设计，换来的是成熟、稳定、少折腾。
+它们把很多重要工作流做进官方 core，用户不需要自己搭太多东西。你接受官方设计，换来的是成熟、稳定和少折腾。
 
-`pi` 不是这个方向。
+`pi` 不走这个方向。
 
-它的 core 更克制。很多高级能力没有默认塞进产品主干，而是通过 extension、package、runtime surface 留给用户去长。
+它的 core 更克制。很多高级能力没有默认塞进产品主干，改通过 extension、package、runtime surface 留给用户去长。
 
-这意味着你得到更高可塑性，也要承担更多复杂度。
+你会得到更高可塑性，也要承担更多复杂度。
 
-所以不能简单说 `pi` 更好。
+不能简单说 `pi` 更好。
 
-更准确地说：
-
-> `pi` 不是更省心的路线，而是更可塑的路线。
+> `pi` 不是更省心的路线，它是更可塑的路线。
 
 ---
 
@@ -112,7 +108,7 @@
 
 我觉得它特别适合一类人：会自己搭 agent 工作台的人。
 
-这类人关心的不是“官方菜单里有没有这个功能”，而是：
+这类人不太关心“官方菜单里有没有这个功能”，他们会问：
 
 - 我能不能接自己的 provider？
 - 我能不能把团队 workflow 做成 extension？
@@ -124,7 +120,7 @@
 
 对这类用户，`pi` 的价值就很明显。
 
-它给的不是一个现成 assistant，而是一个可以继续生长的 agent host。
+它给的不是现成 assistant，是一个可以继续生长的 agent host。
 
 你可以把它当成：
 
@@ -135,17 +131,15 @@
 - session state workbench；
 - 自己 agent 工作台的底座。
 
-当然，这些说法听起来都比“开箱即用”更麻烦。
-
-但这正是它的定位。
+这些说法听起来都比“开箱即用”麻烦。这正是它的定位。
 
 `pi` 要回答的问题不是“能不能让所有用户更轻松”。
 
-它真正要回答的是：
+它要回答的是：
 
 > 对那些愿意自己搭系统的人，它能不能给出足够强、足够干净、足够可组合的宿主 surface？
 
-从前面几章看，这个问题值得继续研究。
+从前面几章看，这个问题值得继续追下去。
 
 ---
 
@@ -153,9 +147,7 @@
 
 写到这里，很容易把 `pi` 和 Claude Code 写成对立。
 
-但我不想这么收。
-
-更准确的说法是：它们代表两条 agent 产品路线。
+我不想这么收。它们更像两条 agent 产品路线。
 
 Claude Code / cc 更像强成品 agent 路线：
 
@@ -174,7 +166,7 @@ Claude Code / cc 更像强成品 agent 路线：
 - 用户得到的是更高可塑性；
 - 代价是需要更强工程能力和治理意识。
 
-所以它们不是简单的“谁功能更多”。
+它们不是简单的“谁功能更多”。
 
 真正的问题是：
 
@@ -182,7 +174,7 @@ Claude Code / cc 更像强成品 agent 路线：
 
 Claude Code 选择了前者，并且做得很强。
 
-`pi` 更偏后者，所以才值得单独研究。
+`pi` 更偏后者，也正因为这样，它值得单独研究。
 
 ---
 
@@ -202,17 +194,17 @@ Claude Code 选择了前者，并且做得很强。
 
 如果 project-local agents 可以参与，就要治理 repo-controlled prompt 的信任边界。
 
-这也是为什么第 03 章里 project agents 默认不加载。
+这也是第 03 章里 project agents 默认不加载的原因。
 
 第 04 章里，plan mode 需要 runtime enforcement，而不是只靠 prompt 自觉。
 
-宿主路线的底层逻辑就是：
+宿主路线的底层逻辑很直接：
 
 > 你把能力开放出去，也会把治理问题带进来。
 
-所以 `pi` 不是轻松路线。
+`pi` 不是轻松路线。
 
-它更像工程师路线。
+它更像一条工程师路线。
 
 它把一些原本由官方产品替你决定的事情，交还给用户、团队和 extension 生态。
 
@@ -224,15 +216,15 @@ Claude Code 选择了前者，并且做得很强。
 
 如果要给 `pi` 一个简短定位，我会这样说：
 
-> `pi` 是一个 minimal terminal coding harness，它的价值不是功能最多，而是把 coding agent 做成可编程宿主。
+> `pi` 是一个 minimal terminal coding harness，它的价值不在功能最多，而在把 coding agent 做成可编程宿主。
 
-这个定位里有三个词。
+这个定位里有三个词值得拆开看。
 
 ### minimal
 
-它不追求把所有高级工作流都塞进 core。
+它不追求把所有高级工作流都塞进 core 里。
 
-不是没有默认能力，而是 core 的职责更克制。
+它不是没有默认能力，只是 core 的职责更克制。
 
 ### harness / host
 
@@ -248,9 +240,9 @@ session、tool、UI、provider、compaction、lifecycle hook 都是宿主 surfac
 
 ---
 
-## 结语：不是功能最多，而是可继续生长
+## 结语：价值不在功能最多，而在可继续生长
 
-所以，这本小书最后想留下的判断很简单。
+这本小书最后想留下的判断很简单。
 
 `pi` 不是为了在功能表上逐项赢过 Claude Code。
 
@@ -262,15 +254,14 @@ session、tool、UI、provider、compaction、lifecycle hook 都是宿主 surfac
 
 如果你想要的是一个官方替你定义好大部分流程的强 agent，Claude Code 这类产品会更直接。
 
-但如果你想研究 agent 产品还能不能做成“宿主”，
-想把自己的 workflow、provider、权限、UI、compaction 和 session state 接进来，
+但如果你想研究 agent 产品还能不能做成“宿主”，也想把自己的 workflow、provider、权限、UI、compaction 和 session state 接进来，
 那 `pi` 很值得看。
 
-它真正要回答的问题不是：
+它要把这个问题：
 
 > 我现在内置了多少功能？
 
-而是：
+换成：
 
 > 我能不能让你在这个 runtime 上继续长出自己的 agent 系统？
 
