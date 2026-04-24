@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B1020"/>
+      <stop offset="100%" stop-color="#121A2F"/>
+    </linearGradient>
+    <linearGradient id="active" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#4F8CFF"/>
+      <stop offset="100%" stop-color="#7C5CFF"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000000" flood-opacity="0.32"/>
+    </filter>
+    <style>
+      .title{font:700 34px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#F8FAFC}
+      .subtitle{font:500 18px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#AAB6D3}
+      .label{font:700 18px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#EAF0FF}
+      .small{font:500 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#B8C4E3}
+      .tiny{font:500 13px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#B8C4E3}
+      .code{font:600 16px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#DDE7FF}
+      .box{fill:#18233D;stroke:#2C3B64;stroke-width:1.5;rx:20;filter:url(#shadow)}
+      .box2{fill:#111A30;stroke:#31436F;stroke-width:1.5;rx:18}
+      .node{fill:#24324F;stroke:#53668F;stroke-width:2}
+      .nodeActive{fill:url(#active);stroke:#B8CAFF;stroke-width:2.5}
+      .nodeDim{fill:#172039;stroke:#334464;stroke-width:1.5}
+      .line{stroke:#53668F;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+      .activeLine{stroke:#6EA2FF;stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+      .dash{stroke:#6EA2FF;stroke-width:3;fill:none;stroke-dasharray:8 8;stroke-linecap:round}
+      .arrow{stroke:#9CB8FF;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9CB8FF"/>
+    </marker>
+  </defs>
+
+  <rect width="1280" height="720" fill="url(#bg)"/>
+
+  <text x="64" y="68" class="title">pi 的 session 不是聊天记录，而是树形 runtime</text>
+  <text x="64" y="101" class="subtitle">文件里保存整棵 entry tree；每轮模型看到的是当前 leaf 回溯出来的 active branch。</text>
+
+  <rect x="64" y="138" width="600" height="440" class="box"/>
+  <text x="96" y="182" class="label">1. 持久层：append-only JSONL entry tree</text>
+  <text x="96" y="212" class="tiny">SessionEntryBase = { type, id, parentId, timestamp }</text>
+
+  <path d="M160 286 L280 286 L400 236" class="line"/>
+  <path d="M280 286 L400 336 L520 336" class="line"/>
+  <path d="M160 286 L280 286 L400 286 L520 286" class="activeLine"/>
+
+  <circle cx="160" cy="286" r="34" class="nodeActive"/>
+  <text x="145" y="292" class="code">A</text>
+  <circle cx="280" cy="286" r="34" class="nodeActive"/>
+  <text x="265" y="292" class="code">B</text>
+  <circle cx="400" cy="236" r="34" class="nodeDim"/>
+  <text x="385" y="242" class="code">C1</text>
+  <circle cx="400" cy="286" r="34" class="nodeActive"/>
+  <text x="385" y="292" class="code">C2</text>
+  <circle cx="400" cy="336" r="34" class="nodeDim"/>
+  <text x="385" y="342" class="code">C3</text>
+  <circle cx="520" cy="286" r="34" class="nodeActive"/>
+  <text x="505" y="292" class="code">D</text>
+  <circle cx="520" cy="336" r="34" class="nodeDim"/>
+  <text x="505" y="342" class="code">E</text>
+
+  <text x="118" y="392" class="small">每次 append：新 entry 以当前 leaf 为 parent</text>
+  <text x="118" y="421" class="small">每次 fork：只是移动 / 复制 active path，不删除旧分支</text>
+  <text x="118" y="450" class="small">compaction、branch_summary、custom_message 也都是树上的 entry</text>
+
+  <rect x="96" y="486" width="520" height="58" class="box2"/>
+  <text x="118" y="522" class="code">leafId = D  →  active path = A → B → C2 → D</text>
+
+  <rect x="728" y="138" width="488" height="440" class="box"/>
+  <text x="760" y="182" class="label">2. 运行层：把 active branch 编译给 LLM</text>
+  <text x="760" y="212" class="tiny">buildSessionContext(entries, leafId, byId)</text>
+
+  <path d="M684 348 C708 348 704 348 728 348" class="arrow"/>
+
+  <rect x="770" y="252" width="396" height="72" class="box2"/>
+  <text x="792" y="282" class="small">从 leaf 沿 parentId 回溯到 root</text>
+  <text x="792" y="306" class="tiny">while(current) path.unshift(current)</text>
+
+  <path d="M968 326 L968 358" class="dash"/>
+
+  <rect x="770" y="360" width="396" height="84" class="box2"/>
+  <text x="792" y="390" class="small">处理 compaction / branch summary / custom message</text>
+  <text x="792" y="414" class="tiny">summary + kept entries + after-compaction entries</text>
+
+  <path d="M968 446 L968 478" class="dash"/>
+
+  <rect x="770" y="480" width="396" height="64" class="box2"/>
+  <text x="792" y="518" class="small">生成这一轮真正送给模型的 messages</text>
+
+  <rect x="64" y="612" width="1152" height="62" rx="18" fill="#18233D" stroke="#405686" stroke-width="1.5"/>
+  <text x="96" y="650" class="label">关键结论：/tree、/fork、/clone、compaction 不是 UI 花活，而是同一套 session runtime 的自然结果。</text>
+</svg>

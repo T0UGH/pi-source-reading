@@ -120,6 +120,9 @@
 
 ### 当前已有材料
 - `docs/notes/2026-04-23-pi-session-runtime-初读.md`
+- `docs/guidebook/2026-04-24-pi-ch02-session-tree-expansion-v1.md`
+- `docs/articles/2026-04-24-pi-session-tree-不是聊天记录而是-runtime-v1.md`
+- `docs/assets/pi-ch02-session-tree-runtime.svg`
 
 ---
 

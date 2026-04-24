@@ -1,1 +1,2 @@
 - `pi-ch01-cc-vs-pi-host-vs-product.svg` - Claude Code vs pi：强成品 agent 与可编程宿主对照图
+- `pi-ch02-session-tree-runtime.svg` - pi session tree：从 append-only entry tree 到 active branch runtime context 的结构图
